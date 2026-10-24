@@ -2,85 +2,63 @@
 package backend;
 
 public class Appointment {
-
-    private String referenceNumber;
+    private int appointmentId;
     private String customerName;
+    private String service;
     private String appointmentDate;
-    private String appointmentTime;
-    private String laundryService;
     private String status;
 
-    // Constructor: creates a new appointment
-    public Appointment(
-            String referenceNumber,
-            String customerName,
-            String appointmentDate,
-            String appointmentTime,
-            String laundryService,
-            String status) {
-
-        this.referenceNumber = referenceNumber;
+    public Appointment(int appointmentId, String customerName,
+                       String service, String appointmentDate) {
+        this.appointmentId = appointmentId;
         this.customerName = customerName;
+        this.service = service;
         this.appointmentDate = appointmentDate;
-        this.appointmentTime = appointmentTime;
-        this.laundryService = laundryService;
-        this.status = status;
+        this.status = "Scheduled";
     }
 
-    // Getters
-    public String getReferenceNumber() {
-        return referenceNumber;
+    public int getAppointmentId() {
+        return appointmentId;
     }
 
     public String getCustomerName() {
         return customerName;
     }
 
+    public String getService() {
+        return service;
+    }
+
     public String getAppointmentDate() {
         return appointmentDate;
-    }
-
-    public String getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public String getLaundryService() {
-        return laundryService;
     }
 
     public String getStatus() {
         return status;
     }
 
-    // Setters: used when updating an appointment
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 
     public void setAppointmentDate(String appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public void setAppointmentTime(String appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public void setLaundryService(String laundryService) {
-        this.laundryService = laundryService;
-    }
-
     public void setStatus(String status) {
         this.status = status;
     }
 
-    // Displays appointment information
     @Override
     public String toString() {
-        return "Reference Number: " + referenceNumber
-                + "\nCustomer Name: " + customerName
-                + "\nAppointment Date: " + appointmentDate
-                + "\nAppointment Time: " + appointmentTime
-                + "\nLaundry Service: " + laundryService
+        return "Appointment ID: " + appointmentId
+                + "\nCustomer: " + customerName
+                + "\nService: " + service
+                + "\nDate: " + appointmentDate
                 + "\nStatus: " + status;
     }
 }

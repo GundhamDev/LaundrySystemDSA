@@ -1,121 +1,172 @@
 
 package cli;
 
-import java.util.Scanner;
-
 import backend.Appointment;
 import backend.AppointmentManager;
+import java.util.Scanner;
 
 public class AppointmentMenu {
-
-    private final Scanner scanner;
     private final AppointmentManager manager;
+    private final Scanner scanner;
 
     public AppointmentMenu(AppointmentManager manager) {
         this.manager = manager;
         this.scanner = new Scanner(System.in);
     }
 
-    public void start() {
+    public void showMenu() {
         int choice;
 
         do {
-            displayMenu();
-            choice = readInt("Enter your choice: ");
+            System.out.println("\n=== APPOINTMENT SYSTEM ===");
+            System.out.println("[1] Create Appointment");
+            System.out.println("[2] View Appointments");
+            System.out.println("[3] Update Appointment");
+            System.out.println("[4] Cancel Appointment");
+            System.out.println("[0] Exit");
+            System.out.print("Enter choice: ");
+
+            choice = readInt();
 
             switch (choice) {
-                case 1 -> createAppointment();
-                case 2 -> manager.viewAppointments();
-                case 3 -> updateAppointment();
-                case 4 -> cancelAppointment();
-                case 5 -> manager.viewAppointmentsSortedByDate();
-                case 6 -> manager.viewAppointmentQueue();
-                case 7 -> manager.viewRecentAppointments();
-                case 0 -> System.out.println("Exiting system...");
-                default -> System.out.println("Invalid choice. Try again.");
+                case 1:
+                    createAppointment();
+                    break;
+                case 2:
+                    manager.viewAllAppointments();
+                    break;
+                case 3:
+                    updateAppointment();
+                    break;
+                case 4:
+                    cancelAppointment();
+                    break;
+                case 0:
+                    System.out.println("Exiting appointment system.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
             }
 
-            System.out.println();
-
         } while (choice != 0);
-
-        scanner.close();
-    }
-
-    private void displayMenu() {
-        System.out.println("==========================================");
-        System.out.println("       LAUNDRY APPOINTMENT SYSTEM");
-        System.out.println("                DSA EDITION");
-        System.out.println("==========================================");
-        System.out.println("[1] Create Appointment");
-        System.out.println("[2] View Appointments");
-        System.out.println("[3] Update Appointment");
-        System.out.println("[4] Cancel Appointment");
-        System.out.println("[5] Sort Appointments by Date (Bubble Sort)");
-        System.out.println("[6] View Appointment Queue (FIFO)");
-        System.out.println("[7] View Recent Appointments (Stack/LIFO)");
-        System.out.println("[0] Exit");
-        System.out.println("==========================================");
     }
 
     private void createAppointment() {
-        System.out.println("\n--- CREATE APPOINTMENT ---");
+        System.out.print("Customer name: ");
+        String name = scanner.nextLine().trim();
 
-        String reference = readText("Reference number: ");
-        String name = readText("Customer name: ");
-        String date = readText("Appointment date (YYYY-MM-DD): ");
-        String time = readText("Appointment time: ");
-        String service = readText("Laundry service: ");
-        String status = readText("Status: ");
+        System.out.print("Laundry service: ");
+        String service = scanner.nextLine().trim();
 
-        Appointment appointment = new Appointment(
-                reference, name, date, time, service, status
-        );
+        System.out.print("Appointment date (YYYY-MM-DD): ");
+        String date = scanner.nextLine().trim();
 
-        manager.createAppointment(appointment);
+        if (name.isEmpty() || service.isEmpty() || date.isEmpty()) {
+            System.out.println("All fields are required.");
+            return;
+        }
+
+        Appointment appointment =
+                manager.createAppointment(name, service, date);
+
+        System.out.println("Appointment created successfully!");
+        System.out.println(appointment);
     }
 
     private void updateAppointment() {
-        System.out.println("\n--- UPDATE APPOINTMENT ---");
+        System.out.print("Enter appointment ID to update: ");
+        int id = readInt();
 
-        String reference = readText("Reference number to update: ");
+        Appointment appointment = manager.findAppointment(id);
 
-        if (manager.searchAppointment(reference) == null) {
+        if (appointment == null) {
             System.out.println("Appointment not found.");
             return;
         }
 
-        String name = readText("New customer name: ");
-        String date = readText("New appointment date (YYYY-MM-DD): ");
-        String time = readText("New appointment time: ");
-        String service = readText("New laundry service: ");
+        System.out.println(appointment);
+        System.out.println("\n[1] Update details");
+        System.out.println("[2] Update status");
+        System.out.print("Choose update type: ");
 
-        manager.updateAppointment(
-                reference, name, date, time, service
-        );
+        int choice = readInt();
+
+        if (choice == 1) {
+            System.out.print("New customer name: ");
+            String name = scanner.nextLine().trim();
+
+            System.out.print("New laundry service: ");
+            String service = scanner.nextLine().trim();
+
+            System.out.print("New appointment date (YYYY-MM-DD): ");
+            String date = scanner.nextLine().trim();
+
+            if (name.isEmpty() || service.isEmpty() || date.isEmpty()) {
+                System.out.println("All fields are required.");
+                return;
+            }
+
+            if (manager.updateAppointment(id, name, service, date)) {
+                System.out.println("Appointment updated successfully.");
+            } else {
+                System.out.println("Appointment cannot be updated.");
+            }
+
+        } else if (choice == 2) {
+            System.out.println("[1] Scheduled");
+            System.out.println("[2] In Progress");
+            System.out.println("[3] Completed");
+            System.out.print("Choose new status: ");
+
+            int statusChoice = readInt();
+            String status;
+
+            switch (statusChoice) {
+                case 1:
+                    status = "Scheduled";
+                    break;
+                case 2:
+                    status = "In Progress";
+                    break;
+                case 3:
+                    status = "Completed";
+                    break;
+                default:
+                    System.out.println("Invalid status choice.");
+                    return;
+            }
+
+            if (manager.updateStatus(id, status)) {
+                System.out.println("Appointment status updated.");
+            } else {
+                System.out.println("Appointment cannot be updated.");
+            }
+
+        } else {
+            System.out.println("Invalid update choice.");
+        }
     }
 
     private void cancelAppointment() {
-        System.out.println("\n--- CANCEL APPOINTMENT ---");
+        System.out.print("Enter appointment ID to cancel: ");
+        int id = readInt();
 
-        String reference = readText("Reference number to cancel: ");
-        manager.cancelAppointment(reference);
+        if (manager.cancelAppointment(id)) {
+            System.out.println("Appointment cancelled successfully.");
+        } else {
+            System.out.println(
+                    "Appointment not found or cannot be cancelled.");
+        }
     }
 
-    private String readText(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine().trim();
-    }
-
-    private int readInt(String prompt) {
+    private int readInt() {
         while (true) {
-            System.out.print(prompt);
             String input = scanner.nextLine().trim();
 
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
+                System.out.print("Enter a valid number: ");
             }
         }
     }
