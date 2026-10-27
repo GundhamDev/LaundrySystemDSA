@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/*The AppointmentManager class is responsible for managing appointment records. 
+  It provides methods to create, read, update, and cancel appointments. 
+  It uses a combination of a linked list and a hash map for efficient storage and retrieval of appointment data.*/
 public class AppointmentManager {
     private final AppointmentLinkedList appointments;
     private final Map<Integer, Appointment> appointmentMap;
@@ -15,6 +18,7 @@ public class AppointmentManager {
 
     private int nextId = 1;
 
+    // Constructor for the AppointmentManager class. Initializes the linked list, hash map, and hash set for managing appointments.
     public AppointmentManager() {
         appointments = new AppointmentLinkedList();
         appointmentMap = new HashMap<>();

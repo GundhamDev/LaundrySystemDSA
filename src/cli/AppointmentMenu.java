@@ -5,15 +5,20 @@ import backend.Appointment;
 import backend.AppointmentManager;
 import java.util.Scanner;
 
+/*The AppointmentMenu class provides a command-line interface for users 
+  to interact with the appointment system.*/
 public class AppointmentMenu {
     private final AppointmentManager manager;
     private final Scanner scanner;
 
+    /*Constructor for the AppointmentMenu class. 
+      Initializes the AppointmentManager and Scanner for user input.*/
     public AppointmentMenu(AppointmentManager manager) {
         this.manager = manager;
         this.scanner = new Scanner(System.in);
     }
 
+    // Displays the main menu and handles user input for various appointment operations.
     public void showMenu() {
         int choice;
 
@@ -51,6 +56,8 @@ public class AppointmentMenu {
         } while (choice != 0);
     }
 
+    /*Handles the creation of a new appointment by prompting the user for details 
+      and calling the AppointmentManager to create it.*/
     private void createAppointment() {
         System.out.print("Customer name: ");
         String name = scanner.nextLine().trim();
@@ -73,6 +80,8 @@ public class AppointmentMenu {
         System.out.println(appointment);
     }
 
+    /*Handles the updating of an existing appointment by prompting the user for new details 
+      and calling the AppointmentManager to update it.*/
     private void updateAppointment() {
         System.out.print("Enter appointment ID to update: ");
         int id = readInt();
@@ -147,6 +156,8 @@ public class AppointmentMenu {
         }
     }
 
+    /*Handles the cancellation of an existing appointment by prompting the user for the appointment ID 
+      and calling the AppointmentManager to cancel it.*/
     private void cancelAppointment() {
         System.out.print("Enter appointment ID to cancel: ");
         int id = readInt();
@@ -158,7 +169,9 @@ public class AppointmentMenu {
                     "Appointment not found or cannot be cancelled.");
         }
     }
-
+    
+    /*Reads an integer input from the user, ensuring that the input is valid. 
+      If the input is not a valid integer, it prompts the user to enter a valid number.*/
     private int readInt() {
         while (true) {
             String input = scanner.nextLine().trim();

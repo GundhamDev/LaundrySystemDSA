@@ -1,16 +1,26 @@
 
 package backend;
 
+// The SampleData class is responsible for loading sample appointment data into the system.
 public class SampleData {
 
+        // This method loads sample appointments into the provided AppointmentManager instance.
     public static void load(AppointmentManager manager) {
+
         manager.createAppointment(
                 "Aga Milagroso", "Wash and Fold", "2026-10-26");
 
         manager.createAppointment(
-                "Maria Santos", "Dry Cleaning", "2026-10-27");
+                "John Bernard Flores", "Dry Cleaning", "2026-10-2");
 
         manager.createAppointment(
-                "Pedro Reyes", "Wash and Iron", "2026-10-28");
+                "Reymar Pascual", "Wash and Iron", "2026-10-19");
+        
+        manager.createAppointment(
+                "Odie James Mangahas", "Wash", "2026-10-11");
+        
+        manager.createAppointment(
+                "Rein Gerona", "Wash and Fold", "2026-10-15");
+
     }
 }
